@@ -7,9 +7,12 @@
 good-follow.rb
 good-arc.rb
 good-clock-adjusted.rb
-good-reminder.rb
+good-reminder-adjusted.rb
 
 simple-animate.rb
+simple-calc.rb # looks a bit off
+simple-calc-adjusted.rb
+simple-draw.rb
 simple-move.rb # (works but looks a bit weird on Linux, see issue #59)
 simple-bounce.rb
 simple-oval.rb
@@ -17,6 +20,9 @@ simple-sound.rb
 simple-stripes.rb
 simple-dialogs-outside.rb
 simple-curve.rb
+simple-keypress.rb
+simple-timer.rb
+simple-dialogs.rb
 
 expert-definr-adjusted.rb
 expert-irb-adjusted.rb
@@ -53,10 +59,12 @@ sample27.rb
 sample28.rb
 sample29.rb
 sample30.rb
+sample31.rb
 sample34.rb
 sample35.rb
 sample36.rb
 sample37.rb
+sample42.rb
 sample44.rb
 sample45.rb
 sample46.rb

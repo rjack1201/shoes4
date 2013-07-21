@@ -1,5 +1,3 @@
-require 'shoes/common_methods'
-
 class Shoes
   class Radio
     include Shoes::CommonMethods

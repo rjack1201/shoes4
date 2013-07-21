@@ -1,12 +1,10 @@
-require 'shoes/common_methods'
-require 'shoes/common/margin'
-
 class Shoes
   DEFAULT_TEXTBLOCK_FONT = "Arial"
 
   class TextBlock
     include Shoes::CommonMethods
     include Shoes::Common::Margin
+
 
     attr_reader  :gui, :parent, :text, :links, :app, :hidden
     attr_accessor :font, :font_size, :width, :height, :left, :top, :fixed, :cursor, :textcursor

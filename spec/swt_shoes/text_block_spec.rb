@@ -32,7 +32,7 @@ describe Shoes::Swt::TextBlock do
     let(:event) { double("event", gc: gc) }
     let(:gc) { double("gc").as_null_object }
     let(:style) { double(:style) }
-    subject { Shoes::Swt::TextBlock::TbPainter.new(dsl, opts) }
+    subject { Shoes::Swt::TbPainter.new(dsl, opts) }
 
     before :each do
       ::Swt::TextLayout.stub(:new) { text_layout }
@@ -100,7 +100,7 @@ describe Shoes::Swt::TextBlock do
       it "sets correct underline style" do
 
         style.should_receive(:underline=).with(true)
-        style.should_receive(:underlineStyle=).with(Shoes::Swt::TextBlock::TbPainter::UNDERLINE_STYLES["single"])
+        style.should_receive(:underlineStyle=).with(Shoes::Swt::TbPainter::UNDERLINE_STYLES["single"])
 
         subject.paintControl(event)
       end
@@ -147,6 +147,34 @@ describe Shoes::Swt::TextBlock do
 
       it "sets default strikethrough color to nil" do
         style.should_receive(:strikeoutColor=).with(nil)
+
+        subject.paintControl(event)
+      end
+    end
+
+    context "font styles" do
+      it "sets font style to bold" do
+        opts[:weight] = true
+        ::Swt::Font.should_receive(:new).with(anything, anything, anything, ::Swt::SWT::BOLD)
+        subject.paintControl(event)
+      end
+
+      it "sets font style to italic" do
+        opts[:emphasis] = true
+        ::Swt::Font.should_receive(:new).with(anything, anything, anything, ::Swt::SWT::ITALIC)
+        subject.paintControl(event)
+      end
+
+      it "sets font style to both bold and italic" do
+        opts[:weight] = true
+        opts[:emphasis] = true
+        ::Swt::Font.should_receive(:new).with(anything, anything, anything, ::Swt::SWT::BOLD | ::Swt::SWT::ITALIC)
+
+        subject.paintControl(event)
+      end
+
+      it "sets font style to normal by default" do
+        ::Swt::Font.should_receive(:new).with(anything, anything, anything, ::Swt::SWT::NORMAL)
 
         subject.paintControl(event)
       end

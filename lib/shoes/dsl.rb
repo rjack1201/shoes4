@@ -1,21 +1,3 @@
-require 'shoes/animation'
-require 'shoes/background'
-require 'shoes/border'
-require 'shoes/button'
-require 'shoes/color'
-require 'shoes/edit_line'
-require 'shoes/image'
-require 'shoes/line'
-require 'shoes/list_box'
-require 'shoes/oval'
-require 'shoes/progress'
-require 'shoes/radio'
-require 'shoes/shape'
-require 'shoes/slot'
-require 'shoes/sound'
-require 'shoes/text'
-require 'shoes/text_block'
-
 class Shoes
   # Methods for creating and manipulating Shoes elements
   #
@@ -25,6 +7,7 @@ class Shoes
   #
   #     @style - a hash of styles
   module DSL
+    include Shoes::Common::Style
 
     def color(c)
       Shoes::Color.create c
@@ -394,12 +377,7 @@ EOS
       @style[:cap] = line_cap
     end
 
-    # Adds style, or just returns current style if no argument
-    #
-    # Returns the updated style
-    def style(new_styles = {})
-      @style.merge! new_styles
-    end
+
 
     # Text blocks
     # normally constants belong to the top, I put them here because they are
@@ -486,6 +464,10 @@ EOS
       @contents.clear
     end
 
+    def append(&blk)
+      blk.call if blk
+    end
+
     def visit url
       match_data = nil
       url_data = Shoes::URL.urls.find {|page, _| match_data = page.match url}
@@ -497,7 +479,7 @@ EOS
           action_proc.call @app, url_argument
         end
       end
-      timer(0.01){top_slot.contents_alignment top_slot}
+      timer(0.01){top_slot.contents_alignment}
     end
 
     def scroll_top

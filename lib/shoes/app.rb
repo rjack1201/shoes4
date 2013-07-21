@@ -1,9 +1,3 @@
-require 'shoes/dsl'
-require 'shoes/color'
-require 'shoes/common/margin'
-require 'tmpdir'
-require 'fileutils'
-
 class Shoes
   shoes_icon = File.expand_path("../../../static/shoes-icon.png", __FILE__)
   if shoes_icon.include? '.jar!'
@@ -106,7 +100,6 @@ class Shoes
         super
         @app.unslotted_elements.each &:remove
         @app.unslotted_elements.clear
-
         @contents << @top_slot
         @current_slot = @top_slot
         instance_eval &blk if blk
