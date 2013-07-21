@@ -93,3 +93,10 @@ require 'shoes/manual'
 require 'shoes/widget'
 require 'shoes/download'
 require 'shoes/font'
+require 'shoes/log_window'
+
+class LogWindowKeypress
+  def logger
+    log = Shoes::LogWindow.setup
+  end
+end
