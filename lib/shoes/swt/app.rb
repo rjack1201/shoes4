@@ -25,6 +25,12 @@ class Shoes
         vb.setIncrement 10
         vb.addSelectionListener SelectionListener.new(self, vb)
         RedrawingAspect.redraws_for self
+        blk = proc {
+          if key == :"control_/"
+            ::Shoes::LogWindow.setup(self)
+          end
+        }
+        ::Shoes::Swt::Keypress.new(@dsl, self, &blk)
       end
 
       def open
