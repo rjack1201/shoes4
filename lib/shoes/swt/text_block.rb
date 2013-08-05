@@ -79,5 +79,6 @@ class Shoes
     class Caption < TextBlock; end
     class Para < TextBlock; end
     class Inscription < TextBlock; end
+    class Span < TextBlock; end
   end
 end
