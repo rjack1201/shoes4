@@ -10,7 +10,7 @@ class Shoes
     attr_reader  :gui, :parent, :text, :links, :app, :hidden
     attr_accessor :font, :font_size, :width, :height, :left, :top, :fixed, :cursor, :textcursor
 
-    def initialize(app, parent, text, font_size, opts = {}, span=nil)
+    def initialize(app, parent, text, font_size, opts = {})
       @parent = parent
       @app = app
       @font = @app.font || DEFAULT_TEXTBLOCK_FONT
@@ -36,6 +36,8 @@ class Shoes
       @left && @top ? set_size(@left.to_i, @left.to_i) : @parent.add_child(self)
 
       clickable_options(opts)
+
+      handle_span(opts) if opts[:span]
     end
 
     def move left, top
@@ -90,6 +92,9 @@ class Shoes
 
       # TODO: Style options
     end
+
+    def handle_span(opts)
+    end
   end
 
   class Banner < TextBlock; end
@@ -100,9 +105,5 @@ class Shoes
   class Para < TextBlock; end
   class Inscription < TextBlock; end
 
-  class Span < TextBlock
-    def initialize()
-      super()
-    end
-  end
+  class Span < TextBlock; end
 end
