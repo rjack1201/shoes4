@@ -20,7 +20,7 @@ class Shoes
         ::Shoes::Swt.register self
         attach_event_listeners
         initialize_scroll_bar
-        RedrawingAspect.redraws_for self, Shoes.display
+        @redrawing_aspect = RedrawingAspect.new self, Shoes.display
       end
 
       def open
@@ -29,6 +29,7 @@ class Shoes
         @shell.open
         @dsl.top_slot.contents_alignment
         @started = true
+        self.fullscreen = true if dsl.start_as_fullscreen?
         ::Swt.event_loop { ::Shoes::Swt.main_app.disposed? } if main_app?
       end
 
@@ -82,6 +83,14 @@ class Shoes
           [str].to_java,
           [::Swt::TextTransfer.getInstance].to_java(::Swt::TextTransfer)
         )
+      end
+
+      def fullscreen=(state)
+        @shell.full_screen = state
+      end
+
+      def fullscreen
+        @shell.full_screen
       end
 
       def add_clickable_element(element)
@@ -148,6 +157,13 @@ class Shoes
       def attach_shell_event_listeners
         @shell.addControlListener ShellControlListener.new(self)
         @shell.addListener(::Swt::SWT::Close, main_window_on_close) if main_app?
+        @shell.addListener(::Swt::SWT::Close, unregister_app)
+      end
+
+      def unregister_app
+        proc do |event|
+          ::Shoes::Swt.unregister(self)
+        end
       end
 
       def attach_real_event_listeners

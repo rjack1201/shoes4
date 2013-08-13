@@ -34,37 +34,20 @@ class Shoes
     attr_accessor :mouse_button, :mouse_pos, :mhcs
 
     attr_accessor :resizable, :app_title
-    attr_writer   :width, :height
+    attr_writer   :width, :height, :start_as_fullscreen
 
     def initialize(opts={}, &blk)
-      opts = DEFAULT_OPTIONS.merge(opts)
-
-      self.width      = opts[:width]
-      self.height     = opts[:height]
-      self.app_title  = opts[:title]
-      self.resizable  = opts[:resizable]
-      self.opts       = opts
-
-      @owner = opts[:owner]
-      @app = self
-      @style = default_styles
-      @contents, @unslotted_elements = [], []
-      @mouse_motion = []
-      @mouse_button, @mouse_pos = 0, [0, 0]
-      @mhcs = []
+      set_attributes_from_options(opts)
+      set_initial_attributes
       set_margin
 
       @gui = Shoes.configuration.backend::App.new @app
 
-      if blk
-        execution_blk = Proc.new do @app.instance_eval &blk end
-      elsif Shoes::URL.urls.keys.any? {|page| page.match '/'}
-        execution_blk = Proc.new do visit '/' end
-      else
-        execution_blk = nil
-      end
+      execution_blk = create_execution_block(blk)
 
       @top_slot = Flow.new self, self, { left: 0, top: 0, width: @width, height: @height}, &execution_blk
+
+      add_console
 
       Shoes.register self
       @gui.open
@@ -131,5 +114,67 @@ class Shoes
     def to_s
       'Shoes App: ' + app_title
     end
+
+    def fullscreen=(state)
+      gui.fullscreen = state
+    end
+
+    def fullscreen
+      gui.fullscreen
+    end
+
+    alias_method :fullscreen?, :fullscreen
+
+    def start_as_fullscreen?
+      @start_as_fullscreen
+    end
+
+    private
+    def create_execution_block(blk)
+      if blk
+        execution_blk = Proc.new do
+          @app.instance_eval &blk
+        end
+      elsif Shoes::URL.urls.keys.any? { |page| page.match '/' }
+        execution_blk = Proc.new do
+          visit '/'
+        end
+      else
+        execution_blk = nil
+      end
+      execution_blk
+    end
+
+    def set_initial_attributes
+      @app                      = self
+      @style                    = default_styles
+      @contents                 = []
+      @unslotted_elements       = []
+      @mouse_motion             = []
+      @mouse_button, @mouse_pos = 0, [0, 0]
+      @mhcs                     = []
+    end
+
+    def set_attributes_from_options(opts)
+      opts = DEFAULT_OPTIONS.merge(opts)
+
+      self.width               = opts[:width]
+      self.height              = opts[:height]
+      self.app_title           = opts[:title]
+      self.resizable           = opts[:resizable]
+      self.opts                = opts
+      self.start_as_fullscreen = opts[:fullscreen]
+
+      @owner = opts[:owner]
+    end
+
+    def add_console
+      keypress do |key|
+        if key == :"control_/"
+          ::Shoes::Logger.setup
+        end
+      end
+    end
+
   end
 end

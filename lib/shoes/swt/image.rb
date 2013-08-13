@@ -12,7 +12,8 @@ class Shoes
 
       BINARY_ENCODING = Encoding.find('binary')
 
-      attr_reader :parent, :real, :dsl, :container, :painter, :width, :height
+      attr_reader :parent, :real, :dsl, :container, :painter
+      attr_accessor :width, :height
 
       def initialize(dsl, parent, blk)
         @dsl = dsl
@@ -56,8 +57,26 @@ class Shoes
         @real        = ::Swt::Graphics::Image.new(::Swt.display, data)
         @full_width  = @real.getImageData.width
         @full_height = @real.getImageData.height
-        @width       = @dsl.opts[:width] || @full_width
-        @height      = @dsl.opts[:height] || @full_height
+        @width       = @dsl.opts[:width] || default_width
+        @height      = @dsl.opts[:height] || default_height
+      end
+
+      def default_width
+        if dsl.opts[:height]
+          ratio = dsl.opts[:height].to_r / @full_height
+          (@full_width * ratio).to_i
+        else
+          @full_width
+        end
+      end
+
+      def default_height
+        if dsl.opts[:width]
+          ratio = dsl.opts[:width].to_r / @full_width
+          (@full_height * ratio).to_i
+        else
+          @full_height
+        end
       end
 
       def download_and_display_real_image(url)
