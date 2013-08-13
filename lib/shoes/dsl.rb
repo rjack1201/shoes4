@@ -392,7 +392,7 @@ EOS
       inscription:  10
     }.freeze
 
-    %w[banner title subtitle tagline caption para inscription span].each do |m|
+    %w[banner title subtitle tagline caption para inscription].each do |m|
       define_method m do |*text|
         opts = text.last.class == Hash ? text.pop : {}
         styles = get_styles text
@@ -425,6 +425,10 @@ EOS
         color = str.pop
         Shoes::Text.new m, str, pattern(color)
       end
+    end
+
+    def span *object
+      create Shoes::Span, *object, nil
     end
 
     def link *str, &blk

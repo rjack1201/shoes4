@@ -10,7 +10,7 @@ class Shoes
     attr_reader  :gui, :parent, :text, :links, :app, :hidden
     attr_accessor :font, :font_size, :width, :height, :left, :top, :fixed, :cursor, :textcursor
 
-    def initialize(app, parent, text, font_size, opts = {})
+    def initialize(app, parent, text, font_size, opts = {}, span=nil)
       @parent = parent
       @app = app
       @font = @app.font || DEFAULT_TEXTBLOCK_FONT
@@ -104,6 +104,5 @@ class Shoes
   class Caption < TextBlock; end
   class Para < TextBlock; end
   class Inscription < TextBlock; end
-
   class Span < TextBlock; end
 end
