@@ -377,8 +377,6 @@ EOS
       @style[:cap] = line_cap
     end
 
-
-
     # Text blocks
     # normally constants belong to the top, I put them here because they are
     # only used here.
@@ -404,6 +402,8 @@ EOS
 
     def get_styles msg, styles=[], spoint=0
       msg.each do |e|
+        next if e.is_a? Shoes::Span
+
         if e.is_a? Shoes::Text
           epoint = spoint + e.to_s.length - 1
           styles << [e, spoint..epoint]
@@ -412,6 +412,10 @@ EOS
         spoint += e.to_s.length
       end
       styles
+    end
+
+    def span *blk
+      Shoes::Span.new *blk
     end
 
     [:code, :del, :em, :ins, :strong, :sub, :sup].each do |m|
@@ -425,10 +429,6 @@ EOS
         color = str.pop
         Shoes::Text.new m, str, pattern(color)
       end
-    end
-
-    def span *object
-      create Shoes::Span, *object, nil
     end
 
     def link *str, &blk
